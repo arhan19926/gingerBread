@@ -2,6 +2,8 @@ import { Column } from "typeorm";
 import { Entity } from "typeorm/decorator/entity/Entity";
 import { baseEntity } from "../../utility/baseEnitity";
 
+
+export type Role = 'ADMIN' | 'CUSTOMER' | 'OWNER';
 @Entity()
 export class User extends baseEntity {
 
