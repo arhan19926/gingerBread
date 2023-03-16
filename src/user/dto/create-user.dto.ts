@@ -8,6 +8,4 @@ export class CreateUserDto {
     lastName: string;
 
     email: string;
-
-    password: string
 }

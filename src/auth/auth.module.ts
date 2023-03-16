@@ -12,7 +12,7 @@ import { jwtConstants } from './constant';
 
 @Module({
   imports: [UserModule, PassportModule, JwtModule.register({
-    secret: jwtConstants.secret
+    secret: process.env.JWT_SECRET
   })],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy,

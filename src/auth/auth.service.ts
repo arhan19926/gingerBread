@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
 import { jwtConstants } from './constant';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,7 +24,23 @@ export class AuthService {
     const payload = { email: user.email, firstName: user.firstName, lastName: user.lastName };
     console.log(user);
     return {
-      access_token: this.jwtService.sign(payload,{secret:jwtConstants.secret})
+      access_token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
+    }
+  }
+
+  async signup(user: CreateUserDto) {
+    try {
+      const userPayload = user;
+      const result = this.userService.create(
+        {
+          firstName: userPayload.firstName,
+          lastName: userPayload.lastName,
+          email: userPayload.email,
+        })
+      return result;
+    } catch (e) {
+      console.log(e);
+      throw e;
     }
   }
 
