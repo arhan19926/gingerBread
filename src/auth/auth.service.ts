@@ -5,12 +5,27 @@ import { User } from '../user/entities/user.entity';
 import { jwtConstants } from './constant';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { comparePassword } from '../utility/password';
+import { Request } from 'express';
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService
   ) { }
+
+
+  async gooogleLogin(req: Request) {
+    if (!req.user) {
+      return `No User From Google`;
+    }
+
+    return {
+      message: `User Information from Google`,
+      user: req.user
+    }
+  }
+
+
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findOne(email);
