@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
 import { jwtConstants } from './constant';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { comparePassword } from '../utility/password';
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,7 +14,8 @@ export class AuthService {
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findOne(email);
-    if (user && user.password === password) {
+    const passCheck = comparePassword(password, user.password);
+    if (user && passCheck) {
       const { password, ...result } = user;
       return result;
     }
