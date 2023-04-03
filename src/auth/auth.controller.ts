@@ -5,17 +5,24 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/loginDto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { ApiBearerAuth, ApiBody, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { log } from 'console';
 
 
+@ApiTags('Auth')
 @Controller('auth')
+
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
 
   @Post('/login')
   @UseGuards(LocalAuthGuard)
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login({
+      email: loginDto.email,
+      password: loginDto.password
+    });
   }
 
   @Post('/signup')
@@ -33,22 +40,5 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleRedirect(@Req() req) {
     return this.authService.gooogleLogin(req);
-  }
-
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get('id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-
-
-  @Delete('id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
   }
 }

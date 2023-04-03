@@ -6,6 +6,7 @@ import { jwtConstants } from './constant';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { comparePassword } from '../utility/password';
 import { Request } from 'express';
+import { LoginDto } from './dto/loginDto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -37,12 +38,16 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
-    const payload = { email: user.email, firstName: user.firstName, lastName: user.lastName };
-    console.log(user);
-    return {
-      access_token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
+  async login(credentials: LoginDto) {
+    const user = await this.userService.findOne(credentials.email);
+    if (user) {
+      const payload = { email: user.email, firstName: user.firstName, lastName: user.lastName };
+      console.log(user);
+      return {
+        access_token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
+      }
     }
+
   }
 
   async signup(user: CreateUserDto) {
